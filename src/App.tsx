@@ -23,6 +23,8 @@ class App extends React.Component<{}, IState> {
 			uploadFileList: null
 		}     	
 		this.selectNewMeme = this.selectNewMeme.bind(this)
+		this.fetchMemes = this.fetchMemes.bind(this)
+		this.fetchMemes("")
 	}
 
 	public render() {
@@ -41,7 +43,7 @@ class App extends React.Component<{}, IState> {
 						<MemeDetail currentMeme={this.state.currentMeme} />
 					</div>
 					<div className="col-5">
-						<MemeList memes={this.state.memes} selectNewMeme={this.selectNewMeme} searchByTag={this.methodNotImplemented}/>
+						<MemeList memes={this.state.memes} selectNewMeme={this.selectNewMeme} searchByTag={this.fetchMemes}/>
 					</div>
 				</div>
 			</div>
@@ -87,6 +89,35 @@ class App extends React.Component<{}, IState> {
 	private selectNewMeme(newMeme: any) {
 		this.setState({
 			currentMeme: newMeme
+		})
+	}
+
+	// Fetch memes by making API call
+	private fetchMemes(tag: any) {
+		let url = "http://phase2apitest.azurewebsites.net/api/meme"
+		if (tag !== "") {
+			url += "/tag?=" + tag
+		}
+		fetch(url, {
+			method: 'GET'
+		})
+		.then(res => res.json())
+		.then(json => {
+			let currentMeme = json[0]
+			if (currentMeme === undefined) {
+				currentMeme = {"id":0, "title":"No memes (╯°□°）╯︵ ┻━┻","url":"","tags":"try a different tag","uploaded":"","width":"0","height":"0"}
+			}
+			this.setState({
+				currentMeme,
+				memes: json
+			})
+		});
+	}
+
+	// Receive input for meme
+	private handleFileUpload(fileList: any) {
+		this.setState({
+			uploadFileList: fileList.target.files
 		})
 	}
 }
