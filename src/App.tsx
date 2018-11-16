@@ -26,7 +26,6 @@ class App extends React.Component<{}, IState> {
 		this.fetchMemes = this.fetchMemes.bind(this)
 		this.fetchMemes("")
 		this.handleFileUpload = this.handleFileUpload.bind(this)
-		this.uploadMeme = this.uploadMeme.bind(this)
 	} 
 
 	public render() {
